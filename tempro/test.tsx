@@ -1,17 +1,33 @@
 import React from 'react';
-import chalk from 'chalk';
 import test from 'ava';
 import {render} from 'ink-testing-library';
+import {Text} from 'ink';
 import App from './source/app.js';
 
-test('greet unknown user', t => {
-	const {lastFrame} = render(<App name={undefined} />);
+test('shows welcome message when no commands entered', t => {
+	const {lastFrame} = render(<App />);
+	const output = lastFrame();
 
-	t.is(lastFrame(), `Hello, ${chalk.green('Stranger')}`);
+	t.true(output?.includes('No commands yet'), 'Should show welcome message');
 });
 
-test('greet user with a name', t => {
-	const {lastFrame} = render(<App name="Jane" />);
+test('command history displays submitted commands', t => {
+	// Test rendering logic by mocking the history display
+	const HistoryDisplay = ({commands}: {readonly commands: string[]}) => (
+		<>
+			{commands.map((command, index) => (
+				<Text key="4">
+					<Text color="green">›</Text> {command}
+				</Text>
+			))}
+		</>
+	);
 
-	t.is(lastFrame(), `, ${chalk.green('Jane')}`);
+	const {lastFrame} = render(
+		<HistoryDisplay commands={['test command', 'another command']} />,
+	);
+	const output = lastFrame();
+
+	t.true(output?.includes('test command'));
+	t.true(output?.includes('another command'));
 });

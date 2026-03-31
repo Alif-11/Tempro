@@ -1,50 +1,59 @@
 import React, {useState} from 'react';
-import {Box, Text} from 'ink';
+import {Box, Text, useStdout} from 'ink';
 import TextInput from 'ink-text-input';
 
-type AppProps = {
-	readonly name: string | undefined;
-};
-
-export default function App({name}: AppProps) {
+export default function App() {
+	// Used to track current text input value
 	const [query, setQuery] = useState('');
-	const [taskList, setTaskList] = useState<string[]>([]);
-	const [chatLog, setChatLog] = useState<string[]>([]);
+	// Used to keep track of all previously sent messages
+	const [history, setHistory] = useState<string[]>([]);
+	// Solely used to figure out terminal height (for message vertical spacing purposes)
+	const {stdout} = useStdout();
 
 	const handleSubmit = (value: string) => {
-		setChatLog([...chatLog, `User: ${value}`, `Bot: You said "${value}"`]);
+		setHistory(previousHistory => [...previousHistory, value]);
 		setQuery('');
-
-		const splitValue = value.split(' ');
-
-		if (splitValue.length > 1) {
-			if (splitValue[0] === 'new') {
-				setChatLog([
-					...chatLog,
-					`User: ${value}`,
-					`Bot: New task made! (Nothing in backend changed, just a frontend change.)`,
-				]);
-
-				setTaskList([...taskList, `{split_value[1]}`]);
-				setQuery('');
-			}
-		} else {
-			setChatLog([
-				...chatLog,
-				`Bot: Invalid command with the operation ${value}!`,
-			]);
-		}
-
-		console.log(`here is the name: ${name ?? 'undefined name'}`);
 	};
 
+	// Get terminal height to fill the entire screen
+	const terminalHeight = stdout?.rows ?? 24;
+
+	const inputHeight = 3;
+	const borderHeight = 2; // Top and bottom borders
+	const maxHistoryHeight = terminalHeight - inputHeight - borderHeight;
+
+	// Only show commands that fit in available space
+	const visibleHistory = history.slice(-maxHistoryHeight);
+
 	return (
-		<Box flexDirection="column">
-			{chatLog.map(line => (
-				<Text key={line}>{line}</Text>
-			))}
-			<Box marginTop={1}>
-				<Text color="green">Chat: </Text>
+		<Box flexDirection="column" height={terminalHeight}>
+			{/* Command History Area - fills remaining space */}
+			<Box flexDirection="column" height={maxHistoryHeight}>
+				{history.length === 0 ? (
+					<Text dimColor>No commands yet. Type something and press Enter.</Text>
+				) : (
+					visibleHistory.map(command => (
+						<Text key="4">
+							<Text color="#1fd01f">{'>'}</Text> {command}
+						</Text>
+					))
+				)}
+			</Box>
+
+			{/* Spacer - 18% from bottom */}
+			<Box height={1} />
+
+			{/* Text input section - 3 rows with borders */}
+			<Box
+				borderBottom
+				borderTop
+				borderLeft={false}
+				borderRight={false}
+				borderStyle="single"
+				flexDirection="column"
+				height={3}
+				width="100%"
+			>
 				<TextInput value={query} onChange={setQuery} onSubmit={handleSubmit} />
 			</Box>
 		</Box>

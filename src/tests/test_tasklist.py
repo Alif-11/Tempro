@@ -6,3 +6,8 @@ task_list = TaskList()
 
 def test_initial_tasklist_has_no_tasks():
   assert len(task_list.get_all_tasks()) == 0
+
+def test_tasklist_add_one_task():
+  current_task = Task("Take CS4852 Notes", "March 22", "March 26")
+  task_list.add(current_task)
+  assert len(task_list.get_all_tasks()) == 1
