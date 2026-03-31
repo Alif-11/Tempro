@@ -14,6 +14,10 @@ export function parseCommand(input: string): ParsedCommand {
 		);
 	}
 
+	if (/\s{2,}/.test(trimmed)) {
+		throw new Error(`Invalid command: '${trimmed}' has too many spaces`);
+	}
+
 	const parts = trimmed.split(' ');
 	const commandString = parts[0];
 

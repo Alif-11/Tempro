@@ -52,3 +52,26 @@ test('throws on invalid command', t => {
 	});
 	t.regex(error!.message, /Invalid command/);
 });
+
+test('throws on extra whitespace between arguments', t => {
+	const error = t.throws(() => {
+		parseCommand('edit  4');
+	});
+	t.regex(error!.message, /too many spaces/);
+	t.regex(error!.message, /edit {2}4/);
+});
+
+test('throws on triple spaces between arguments', t => {
+	const error = t.throws(() => {
+		parseCommand('edit   4');
+	});
+	t.regex(error!.message, /too many spaces/);
+});
+
+test('throws on multiple spaces in middle of multi-arg command', t => {
+	const error = t.throws(() => {
+		parseCommand('new   task');
+	});
+	t.regex(error!.message, /too many spaces/);
+	t.regex(error!.message, /new {3}task/);
+});
