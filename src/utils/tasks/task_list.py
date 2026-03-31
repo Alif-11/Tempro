@@ -54,12 +54,50 @@ class TaskList:
     Gets all tasks we currently have stored as a list of task objects.
 
     Precondition:   None
-    Postcondition:  Returns a list of all topics we have on record. 
+    Postcondition:  Returns a list of all topics we have on record.
     """
     all_tasks_list = []
     for task in self.task_list:
       task_deepcopy = copy.deepcopy(task)
       all_tasks_list.append(task_deepcopy)
-    
+
     return all_tasks_list
+
+  def get_task_by_id(self, task_id: str):
+    """
+    Gets a specific task by its ID.
+
+    Precondition:   task_id is a valid UUID string
+    Postcondition:  Returns the task if found, None otherwise
+    """
+    for task in self.task_list:
+      if task.task_id == task_id:
+        return copy.deepcopy(task)
+    return None
+
+  def delete_task(self, task_id: str) -> bool:
+    """
+    Deletes a task from the list by its ID.
+
+    Precondition:   task_id is a valid UUID string
+    Postcondition:  Returns True if task was deleted, False if not found
+    """
+    for i, task in enumerate(self.task_list):
+      if task.task_id == task_id:
+        self.task_list.pop(i)
+        return True
+    return False
+
+  def update_task(self, task_id: str, **kwargs):
+    """
+    Updates a task with the provided fields.
+
+    Precondition:   task_id is a valid UUID string
+    Postcondition:  Returns the updated task if found, None otherwise
+    """
+    for task in self.task_list:
+      if task.task_id == task_id:
+        task.edit(**kwargs)
+        return copy.deepcopy(task)
+    return None
 
