@@ -10,6 +10,9 @@ export default function App() {
 	// Solely used to figure out terminal height (for message vertical spacing purposes)
 	const {stdout} = useStdout();
 
+	/**
+	 * @side_effect Updates chat history and current command line text value
+	 */
 	const handleSubmit = (value: string) => {
 		setHistory(previousHistory => [...previousHistory, value]);
 		setQuery('');
