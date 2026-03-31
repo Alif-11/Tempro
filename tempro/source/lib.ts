@@ -1,9 +1,9 @@
 export type Command = 'new' | 'get' | 'getall' | 'edit' | 'rm';
 
-export interface ParsedCommand {
+export type ParsedCommand = {
 	command: Command;
 	args?: string[];
-}
+};
 
 export function parseCommand(input: string): ParsedCommand {
 	const trimmed = input.trim();

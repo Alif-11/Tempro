@@ -9,7 +9,7 @@ test('parses valid command with no args', t => {
 
 test('parses valid command with one arg', t => {
 	t.deepEqual(parseCommand('edit 4'), {
-		command: 'get',
+		command: 'edit',
 		args: ['4'],
 	});
 });

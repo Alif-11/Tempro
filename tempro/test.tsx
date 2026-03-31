@@ -13,20 +13,24 @@ test('shows welcome message when no commands entered', t => {
 
 test('command history displays submitted commands', t => {
 	// Test rendering logic by mocking the history display
-	const HistoryDisplay = ({commands}: {readonly commands: string[]}) => (
-		<>
-			{commands.map((command, index) => (
-				<Text key="4">
-					<Text color="green">›</Text> {command}
-				</Text>
-			))}
-		</>
-	);
+	function HistoryDisplay({commands}: {readonly commands: string[]}) {
+		return (
+			<>
+				{commands.map(command => (
+					<Text key="4">
+						<Text color="green">›</Text> {command}
+					</Text>
+				))}
+			</>
+		);
+	}
 
 	const {lastFrame} = render(
 		<HistoryDisplay commands={['test command', 'another command']} />,
 	);
 	const output = lastFrame();
+	console.log('HUHUHU?');
+	console.log(output);
 
 	t.true(output?.includes('test command'));
 	t.true(output?.includes('another command'));
