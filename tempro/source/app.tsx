@@ -20,19 +20,17 @@ export default function App() {
 	 * @side_effect Updates chat history and current command line text value
 	 */
 	const handleSubmit = (value: string) => {
+		const historyEntry: HistoryEntry = {command: ''};
+		historyEntry.command = value;
+
 		try {
 			parseCommand(value);
-			setHistory(previousHistory => [...previousHistory, {command: value}]);
 		} catch (error: unknown) {
-			setHistory(previousHistory => [
-				...previousHistory,
-				{
-					command: value,
-					error: error instanceof Error ? error.message : 'Unknown error',
-				},
-			]);
+			historyEntry.error =
+				error instanceof Error ? error.message : 'Unknown error';
 		}
 
+		setHistory(entries => [...entries, historyEntry]);
 		setQuery('');
 	};
 
@@ -53,8 +51,8 @@ export default function App() {
 				{history.length === 0 ? (
 					<Text dimColor>No commands yet. Type something and press Enter.</Text>
 				) : (
-					visibleHistory.map((entry, index) => (
-						<Text key={`${entry.command}-${index}`}>
+					visibleHistory.map(entry => (
+						<Text key={`${entry.command}`}>
 							{entry.error ? (
 								<Text color="red">{entry.error}</Text>
 							) : (
