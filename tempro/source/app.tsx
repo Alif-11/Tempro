@@ -62,8 +62,7 @@ export default function App() {
 
 	const inputHeight = 3;
 	const borderHeight = 2; // Top and bottom borders
-	const maxHistoryHeight =
-		terminalHeight - (inputHeight + 1) - (borderHeight + 1);
+	const maxHistoryHeight = terminalHeight - inputHeight - borderHeight;
 
 	// Only show commands that fit in available space
 	const visibleHistory = history.slice(-maxHistoryHeight);
@@ -87,8 +86,8 @@ export default function App() {
 					/*(
 						visibleHistory.map(_ => <Text key="4"></Text>)
 					)*/
-					visibleHistory.map(entry => (
-						<Text key="2">
+					visibleHistory.map((entry, index) => (
+						<Text key={`${index}`}>
 							{entry.error ? (
 								<Text color="red">{entry.error}</Text>
 							) : (
