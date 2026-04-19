@@ -10,7 +10,8 @@
 	"scripts": {
 		"build": "tsc",
 		"dev": "tsc --watch",
-		"test": "prettier --check . && xo && ava"
+		"test": "prettier --check . && xo && ava",
+		"tempro": "> log/app-error.log && npm run build && tempro"
 	},
 	"files": [
 		"dist"
@@ -19,7 +20,8 @@
 		"ink": "^4.1.0",
 		"ink-text-input": "^5.0.1",
 		"meow": "^11.0.0",
-		"react": "^18.2.0"
+		"react": "^18.2.0",
+		"winston": "^3.19.0"
 	},
 	"devDependencies": {
 		"@sindresorhus/tsconfig": "^3.0.1",

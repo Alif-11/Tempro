@@ -5,6 +5,12 @@ export type ParsedCommand = {
 	args?: string[];
 };
 
+/**
+ * @purpose Parses a string to return the command and command arguments embedded within it
+ * @precondition The `input` parameter must be alphanumeric
+ * @postcondition Returns the parsed command and arguments as a variable of type ParsedCommand - which has command and args as its fields.
+ * @sideeffect Will throw errors if `input` is empty, has more than two or more spaces within the executed command, or the parsed command is not one of the five valid commands.
+ */
 export function parseCommand(input: string): ParsedCommand {
 	const trimmed = input.trim();
 
