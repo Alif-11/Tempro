@@ -7,6 +7,7 @@ import {createLogger, format, transports} from 'winston';
 type HistoryEntry = {
 	command: string;
 	error?: string;
+	id: number;
 };
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
 	const [history, setHistory] = useState<HistoryEntry[]>([]);
 	// Solely used to figure out terminal height (for message vertical spacing purposes)
 	const {stdout} = useStdout();
+	const [entryId, setEntryId] = useState(0);
 
 	const logger = createLogger({
 		level: 'debug',
@@ -43,7 +45,7 @@ export default function App() {
 	 * @postcondition Updates chat history and current command line text value
 	 */
 	const handleSubmit = (value: string) => {
-		const historyEntry: HistoryEntry = {command: ''};
+		const historyEntry: HistoryEntry = {command: '', id: entryId};
 		historyEntry.command = value;
 
 		try {
@@ -55,6 +57,7 @@ export default function App() {
 
 		setHistory(entries => [...entries, historyEntry]);
 		setQuery('');
+		setEntryId(entryId + 1);
 	};
 
 	// Get terminal height to fill the entire screen
@@ -86,8 +89,8 @@ export default function App() {
 					/*(
 						visibleHistory.map(_ => <Text key="4"></Text>)
 					)*/
-					visibleHistory.map((entry, index) => (
-						<Text key={`${index}`}>
+					visibleHistory.map(entry => (
+						<Text key={`${entry.id}`}>
 							{entry.error ? (
 								<Text color="red">{entry.error}</Text>
 							) : (
